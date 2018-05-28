@@ -1,11 +1,13 @@
 using System;
 using Modl.Common;
+using Modl.Vm.Exceptions;
 
 namespace Modl.Vm {
     internal sealed class VirtualMachine {
         private readonly byte[] _program;
 
         private int __IP;
+        private int __SP;
         private int __FP;
         private int __AP;
 
@@ -21,10 +23,18 @@ namespace Modl.Vm {
 
         public void Execute (bool trace = false) {
             while (true && __IP < _program.Length) {
-                var inst = _program[__IP];
+                var inst = _program[__IP++];
 
                 switch (inst) {
+                    case OpCodes.ConstIntZero:
+                        if (__SP >= _stack.Length) throw new OperandStackOverflowException();
+                        _stack[__SP++] = 0;
+                        break;
 
+                    case OpCodes.ConstIntOne:
+                        if (__SP >= _stack.Length) throw new OperandStackOverflowException();
+                        _stack[__SP++] = 1;
+                        break;
 
                     case OpCodes.Halt:
                         return;
