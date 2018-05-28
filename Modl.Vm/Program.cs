@@ -1,4 +1,5 @@
 ﻿using System;
+using Modl.Common;
 
 namespace Modl.Vm
 {
@@ -6,7 +7,7 @@ namespace Modl.Vm
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello Modl!");
+            Console.WriteLine($"Hello Modl! Opcode for ConstInt is {OpCodes.ConstInt}.");
         }
     }
 }
