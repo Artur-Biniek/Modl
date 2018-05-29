@@ -11,6 +11,8 @@ namespace Modl.Vm
             var prg = new [] {
                 OpCodes.ConstIntOne,
                 OpCodes.ConstIntZero,
+                OpCodes.ConstIntOne,
+                OpCodes.ConstInt(1459),
                 OpCodes.Halt
             }.SelectMany (i => i.GetBytes()).ToArray();
 

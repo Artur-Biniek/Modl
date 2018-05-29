@@ -38,6 +38,13 @@ namespace Modl.Vm {
                         _stack[__SP++] = 1;
                         break;
 
+                    case OpCode.CIntN:
+                        if (__SP >= _stack.Length) throw new OperandStackOverflowException ();
+                        int v = getIntArg(_program, __IP);
+                        __IP += 4;
+                        _stack[__SP++] = v;
+                        break;                        
+
                     case OpCode.Halt:
                         return;
                 }
@@ -51,6 +58,12 @@ namespace Modl.Vm {
 
         static string formatArray (object[] arr, int cnt) {
             return string.Join (", ", arr.Take (cnt));
+        }
+
+        static int getIntArg(byte[] arr, int offset) {
+            var raw = arr.Skip(offset).Take(4);
+            var bytes = (BitConverter.IsLittleEndian ? raw : raw.Reverse()).ToArray();
+            return BitConverter.ToInt32(bytes, 0);
         }
     }
 }
