@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Modl.Common;
 using Modl.Vm.Exceptions;
 
@@ -23,23 +24,33 @@ namespace Modl.Vm {
 
         public void Execute (bool trace = false) {
             while (true && __IP < _program.Length) {
-                var inst = _program[__IP++];
+                var oldIp = __IP;
+                var inst = (OpCode)_program[__IP++];
 
                 switch (inst) {
-                    case OpCodes.ConstIntZero:
-                        if (__SP >= _stack.Length) throw new OperandStackOverflowException();
+                    case OpCode.CInt0:
+                        if (__SP >= _stack.Length) throw new OperandStackOverflowException ();
                         _stack[__SP++] = 0;
                         break;
 
-                    case OpCodes.ConstIntOne:
-                        if (__SP >= _stack.Length) throw new OperandStackOverflowException();
+                    case OpCode.CInt1:
+                        if (__SP >= _stack.Length) throw new OperandStackOverflowException ();
                         _stack[__SP++] = 1;
                         break;
 
-                    case OpCodes.Halt:
+                    case OpCode.Halt:
                         return;
                 }
+
+                if (trace) {
+                    Console.WriteLine ($"{oldIp,5} {inst,-10} STACK: [{formatArray(_stack, __SP)}]");
+                    Console.WriteLine ($"{' ',-16} CALLS: [{formatArray(_stack, __SP)}]");
+                }
             }
+        }
+
+        static string formatArray (object[] arr, int cnt) {
+            return string.Join (", ", arr.Take (cnt));
         }
     }
 }

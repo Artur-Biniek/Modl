@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Modl.Common;
 
 namespace Modl.Vm
@@ -7,10 +8,15 @@ namespace Modl.Vm
     {
         static void Main(string[] args)
         {            
-            var vm = new VirtualMachine(new [] {OpCodes.ConstIntOne, OpCodes.ConstIntZero, OpCodes.Halt});
+            var prg = new [] {
+                OpCodes.ConstIntOne,
+                OpCodes.ConstIntZero,
+                OpCodes.Halt
+            }.SelectMany (i => i.GetBytes()).ToArray();
+
+            var vm = new VirtualMachine(prg);
+
             vm.Execute(true);
-            
-            Console.WriteLine($"Hello Modl! Opcode for ConstInt is {OpCodes.ConstInt}.");
         }
     }
 }
