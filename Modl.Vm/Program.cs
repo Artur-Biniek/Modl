@@ -15,13 +15,13 @@ namespace Modl.Vm
                 OpCodes.ConstIntOne,
                 OpCodes.ConstInt(1459),
                 OpCodes.Halt,
-                OpCodes.ConstInt(666),
+                OpCodes.ConstInt(6),
                 OpCodes.ConstIntZero,
                 OpCodes.ConstIntOne,
                 OpCodes.Call(2),
-                OpCodes.Pop,
+                OpCodes.MulInt,
                 OpCodes.Ret,
-                OpCodes.ConstInt(777),
+                OpCodes.ConstInt(7),
                 OpCodes.Ret,
             }.SelectMany (i => i.GetBytes()).ToArray();
 

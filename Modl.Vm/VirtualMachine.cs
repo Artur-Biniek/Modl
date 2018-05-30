@@ -87,6 +87,51 @@ namespace Modl.Vm {
                             break;
                         }
 
+                    case OpCode.AddInt:
+                        {
+                            var a = (int) _stack[__SP - 1];
+                            var b = (int) _stack[__SP - 2];
+                            _stack[__SP - 2] = a + b;
+                            __SP--;
+                            break;
+                        }
+
+                    case OpCode.SubInt:
+                        {
+                            var a = (int) _stack[__SP - 1];
+                            var b = (int) _stack[__SP - 2];
+                            _stack[__SP - 2] = a - b;
+                            __SP--;
+                            break;
+                        }
+
+                    case OpCode.MulInt:
+                        {
+                            var a = (int) _stack[__SP - 1];
+                            var b = (int) _stack[__SP - 2];
+                            _stack[__SP - 2] = a * b;
+                            __SP--;
+                            break;
+                        }
+
+                    case OpCode.DivInt:
+                        {
+                            var a = (int) _stack[__SP - 1];
+                            var b = (int) _stack[__SP - 2];
+                            _stack[__SP - 2] = a / b;
+                            __SP--;
+                            break;
+                        }
+
+                    case OpCode.ModInt:
+                        {
+                            var a = (int) _stack[__SP - 1];
+                            var b = (int) _stack[__SP - 2];
+                            _stack[__SP - 2] = a % b;
+                            __SP--;
+                            break;
+                        }
+
                     case OpCode.Pop:
                         {
                             __SP--;
