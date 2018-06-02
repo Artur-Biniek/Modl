@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Modl.Common;
+using Antlr4
 
 namespace Modl.Vm
 {
@@ -34,6 +35,8 @@ namespace Modl.Vm
             var vm = new VirtualMachine(prg, functions);
 
             vm.Execute(true);
+
+            var l = new ANTl
         }
     }
 }

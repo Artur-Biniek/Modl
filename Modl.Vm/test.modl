@@ -1,0 +1,8 @@
+.main():
+    int     0
+    int     1
+    add
+    halt
+    
+.fib():
+    ret    
