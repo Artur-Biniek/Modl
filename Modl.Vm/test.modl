@@ -1,13 +1,14 @@
 .main():
-    int     0
+    int     6
     int     1
-    add
+    call    sum
+    print
     hlt
     
 .fib():
     ret    
 
-.sum(args=2):
+.sum(args=2, locals=1):
     lda 0
     lda 1
     add

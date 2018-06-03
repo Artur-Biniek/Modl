@@ -1,35 +1,39 @@
 grammar Asm;
 
 program
-    : fun+ EOF
-;
+    : fun+ EOF;
 
 fun
-    : '.' ID args? ':' NL+ stats
-;
+    : '.' ID args? ':' NL+ stats;
 
 stats
-    : stat+
-;
+    : stat+;
 
 stat
-    : KEYWORD operand* (NL+)
-;
+    : KEYWORD_NOOP (NL+) 
+    | KEYWORD_SINGLE operand (NL+)
+    ;
 
 operand
-    : NUM
+    : NUM 
     | ID
-;
+    ;
 
-args
-    : '(' (pair (',' pair)*)? ')'
-;
+args: '(' (pair (',' pair)*)? ')';
 
-pair
-    : ID '=' NUM
-;
+pair: ID '=' NUM;
 
-KEYWORD: 'hlt' | 'call' | 'ret' | 'pop' | 'prnt' | 'int' | 'add' | 'sub' | 'mul' | 'div' | 'mod' | 'lda' ;
+KEYWORD_NOOP:
+	'hlt'
+	| 'ret'
+	| 'pop'
+	| 'print'
+	| 'add'
+	| 'sub'
+	| 'mul'
+	| 'div'
+	| 'mod';
+KEYWORD_SINGLE: 'call' | 'int' | 'lda';
 ID: [a-zA-Z]+;
 NUM: [0-9]+;
 WS: [ \t] -> skip;

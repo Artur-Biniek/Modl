@@ -28,9 +28,6 @@ namespace Modl.Vm {
                 new FunctionDescriptor ("sum", 19, 2, 0)
             };
 
-            var vm = new VirtualMachine (prg, functions);
-
-            vm.Execute (true);
 
             var input = new AntlrFileStream ("Modl.Vm\\test.modl");
             var lexer = new AsmLexer (input);
@@ -39,6 +36,11 @@ namespace Modl.Vm {
             var tree = parser.program();
             var visit = new AsmAstBuilder();
             visit.VisitProgram(tree);
+
+            
+            var vm = new VirtualMachine (visit.Program, visit.Functions);
+
+            vm.Execute (true);
         }
     }
 }
