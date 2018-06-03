@@ -15,7 +15,9 @@ namespace Modl.Common {
         Call = 100,
         Ret = 101,
         Pop = 102,
-        LdArg = 103, 
-        Print = 104,      
+        LdArg = 103,
+        LdLoc = 104,
+        StLoc = 105,
+        Print = 106,      
     }
 }

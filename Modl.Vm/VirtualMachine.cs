@@ -27,8 +27,12 @@ namespace Modl.Vm {
 
         public void Execute (bool trace = false) {
             if (__AP >= _calls.Length) throw new CallStackOverflowException ();
-            _calls[__AP++] = new ActivationRecord (0, _program.Length);
+
+            var main = Array.IndexOf (_functions.Select (f => f.Name).ToArray (), "main");
+
+            _calls[__AP++] = new ActivationRecord (main, _program.Length);
             __SP = _functions[0].LocalsCount;
+            __FP = -1;
 
             while (true && __IP < _program.Length) {
                 var oldIp = __IP;
@@ -140,12 +144,40 @@ namespace Modl.Vm {
 
                     case OpCode.LdArg:
                         {
-                            int v = getIntArg (_program, __IP) + 1;
+                            int v = getIntArg (_program, __IP);
                             __IP += 4;
 
                             op1 = v.ToString ();
 
+                            v++;
+
                             _stack[__SP++] = _stack[__FP - v];
+                            break;
+                        }
+
+                    case OpCode.LdLoc:
+                        {
+                            int v = getIntArg (_program, __IP);
+                            __IP += 4;
+
+                            op1 = v.ToString ();
+
+                            v++;
+
+                            _stack[__SP++] = _stack[__FP + v];
+                            break;
+                        }
+
+                    case OpCode.StLoc:
+                        {
+                            int v = getIntArg (_program, __IP);
+                            __IP += 4;
+
+                            op1 = v.ToString ();
+
+                            v++;
+
+                            _stack[__FP + v] = _stack[--__SP];
                             break;
                         }
 
@@ -158,6 +190,9 @@ namespace Modl.Vm {
 
                     case OpCode.Halt:
                         return;
+
+                    default:
+                        throw new Exception ("FATAL: Invalid program.");
                 }
 
                 if (trace) {

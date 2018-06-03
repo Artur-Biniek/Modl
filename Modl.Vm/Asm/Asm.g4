@@ -33,7 +33,7 @@ KEYWORD_NOOP:
 	| 'mul'
 	| 'div'
 	| 'mod';
-KEYWORD_SINGLE: 'call' | 'int' | 'lda';
+KEYWORD_SINGLE: 'call' | 'int' | 'lda' | 'ldloc' | 'stloc' ;
 ID: [a-zA-Z]+;
 NUM: [0-9]+;
 WS: [ \t] -> skip;

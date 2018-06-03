@@ -73,6 +73,10 @@ namespace Modl.Vm.Asm {
                         _program.AddRange (OpCodes.AddInt.GetBytes ());
                         return null;
 
+                    case "sub":
+                        _program.AddRange (OpCodes.SubInt.GetBytes ());
+                        return null;
+
                     case "ret":
                         _program.AddRange (OpCodes.Ret.GetBytes ());
                         return null;
@@ -113,7 +117,7 @@ namespace Modl.Vm.Asm {
                         {
                             var arg = int.Parse (ctx.operand ().NUM ().GetText ());
 
-                            if (_currentFunction.ArgumentsCount < arg) {
+                            if (_currentFunction.ArgumentsCount < arg|| arg < 0) {
                                 throw new Exception ($"Can't load {arg} argument in function {_currentFunction.Name}.");
                             }
 
@@ -121,6 +125,32 @@ namespace Modl.Vm.Asm {
 
                             return null;
                         }
+
+                    case "ldloc":
+                        {
+                            var arg = int.Parse (ctx.operand ().NUM ().GetText ());
+
+                            if (_currentFunction.LocalsCount < arg || arg < 0) {
+                                throw new Exception ($"Can't load {arg} local in function {_currentFunction.Name}.");
+                            }
+
+                            _program.AddRange (OpCodes.LoadLocal (arg).GetBytes ());
+
+                            return null;
+                        }          
+
+                    case "stloc":
+                        {
+                            var arg = int.Parse (ctx.operand ().NUM ().GetText ());
+
+                            if (_currentFunction.LocalsCount < arg || arg < 0) {
+                                throw new Exception ($"Can't store {arg} local in function {_currentFunction.Name}.");
+                            }
+
+                            _program.AddRange (OpCodes.StoreLocal (arg).GetBytes ());
+
+                            return null;
+                        }                                     
 
                     case "call":
                         {

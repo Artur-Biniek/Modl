@@ -17,6 +17,12 @@ namespace Modl.Common {
         public static Instruction LoadArg (int argIndex) {
             return new OneOperandInstruction<int> (OpCode.LdArg, argIndex);
         }
+        public static Instruction LoadLocal (int argIndex) {
+            return new OneOperandInstruction<int> (OpCode.LdLoc, argIndex);
+        }
+        public static Instruction StoreLocal (int argIndex) {
+            return new OneOperandInstruction<int> (OpCode.StLoc, argIndex);
+        }
         public static Instruction AddInt = new ZeroOperandInstruction (OpCode.AddInt);
         public static Instruction SubInt = new ZeroOperandInstruction (OpCode.SubInt);
         public static Instruction MulInt = new ZeroOperandInstruction (OpCode.MulInt);
