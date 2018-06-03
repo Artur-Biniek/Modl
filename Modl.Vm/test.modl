@@ -2,7 +2,13 @@
     int     0
     int     1
     add
-    halt
+    hlt
     
 .fib():
     ret    
+
+.sum(args=2):
+    lda 0
+    lda 1
+    add
+    ret

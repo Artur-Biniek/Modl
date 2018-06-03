@@ -13,7 +13,7 @@ stats
 ;
 
 stat
-    : ID operand* NL+
+    : KEYWORD operand* (NL+)
 ;
 
 operand
@@ -22,13 +22,14 @@ operand
 ;
 
 args
-    : '(' pair (',' pair)* ')'
+    : '(' (pair (',' pair)*)? ')'
 ;
 
 pair
     : ID '=' NUM
 ;
 
+KEYWORD: 'hlt' | 'call' | 'ret' | 'pop' | 'prnt' | 'int' | 'add' | 'sub' | 'mul' | 'div' | 'mod' | 'lda' ;
 ID: [a-zA-Z]+;
 NUM: [0-9]+;
 WS: [ \t] -> skip;

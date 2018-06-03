@@ -138,6 +138,24 @@ namespace Modl.Vm {
                             break;
                         }
 
+                    case OpCode.LdArg:
+                        {
+                            int v = getIntArg (_program, __IP) + 1;
+                            __IP += 4;
+
+                            op1 = v.ToString ();
+
+                            _stack[__SP++] = _stack[__FP - v];
+                            break;
+                        }
+
+                    case OpCode.Print:
+                        {
+                            var obj = _stack[--__SP];
+                            Console.WriteLine (obj);
+                            break;
+                        }
+
                     case OpCode.Halt:
                         return;
                 }

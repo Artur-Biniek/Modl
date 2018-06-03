@@ -1,4 +1,4 @@
 **/obj/
 **/bin/
 .vscode/*
-Modl.Vm/Asm/.antlr/*
+Modl.Vm/Asm/Antlr/*

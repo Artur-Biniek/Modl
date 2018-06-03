@@ -13,7 +13,10 @@ namespace Modl.Common {
         }
         public static Instruction Ret = new ZeroOperandInstruction (OpCode.Ret);
         public static Instruction Pop = new ZeroOperandInstruction (OpCode.Pop);
-
+        public static Instruction Print = new ZeroOperandInstruction (OpCode.Print);
+        public static Instruction LoadArg (int argIndex) {
+            return new OneOperandInstruction<int> (OpCode.LdArg, argIndex);
+        }
         public static Instruction AddInt = new ZeroOperandInstruction (OpCode.AddInt);
         public static Instruction SubInt = new ZeroOperandInstruction (OpCode.SubInt);
         public static Instruction MulInt = new ZeroOperandInstruction (OpCode.MulInt);
