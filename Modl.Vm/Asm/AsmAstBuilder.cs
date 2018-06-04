@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Modl.Common;
-using Modl.Common.Instructions;
 using Modl.Vm.Asm.Antlr;
 
 namespace Modl.Vm.Asm {
@@ -71,28 +70,27 @@ namespace Modl.Vm.Asm {
             if (zeroOp != null) {
                 switch (zeroOp.GetText ()) {
                     case "hlt":
-                        _program.AddRange (OpCodes.Halt.GetBytes ());
+                        _program.Add ((byte) OpCode.Halt);
                         return null;
 
                     case "add":
-                        _program.AddRange (OpCodes.AddInt.GetBytes ());
+                        _program.Add ((byte) OpCode.AddInt);
                         return null;
 
                     case "sub":
-                        _program.AddRange (OpCodes.SubInt.GetBytes ());
+                        _program.Add ((byte) OpCode.SubInt);
                         return null;
 
                     case "ret":
-                        _program.AddRange (OpCodes.Ret.GetBytes ());
+                        _program.Add ((byte) OpCode.Ret);
                         return null;
 
                     case "print":
-                        _program.AddRange (OpCodes.Print.GetBytes ());
+                        _program.Add ((byte) OpCode.Print);
                         return null;
 
                     default:
                         throw new Exception ($"Unknown [{zeroOp.GetText()}] instruction.");
-                        _program.Add (0);
                 }
             }
 
@@ -108,16 +106,14 @@ namespace Modl.Vm.Asm {
                     case "int":
                         {
                             var arg = int.Parse (ctx.operand ().NUM ().GetText ());
-                            Instruction inst;
                             if (arg == 0) {
-                                inst = OpCodes.ConstIntZero;
+                                _program.Add ((byte) OpCode.CInt0);
                             } else if (arg == 1) {
-                                inst = OpCodes.ConstIntOne;
+                                _program.Add ((byte) OpCode.CInt1);
                             } else {
-                                inst = OpCodes.ConstInt (arg);
+                                _program.Add ((byte) OpCode.CIntN);
+                                _program.AddRange (Utils.GetBytes (arg));
                             }
-
-                            _program.AddRange (inst.GetBytes ());
 
                             return null;
                         }
@@ -130,7 +126,8 @@ namespace Modl.Vm.Asm {
                                 throw new Exception ($"Can't load {arg} argument in function {_currentFunction.Descriptor.Name}.");
                             }
 
-                            _program.AddRange (OpCodes.LoadArg (arg).GetBytes ());
+                            _program.Add ((byte) OpCode.LdArg);
+                            _program.AddRange (Utils.GetBytes (arg));
 
                             return null;
                         }
@@ -143,7 +140,8 @@ namespace Modl.Vm.Asm {
                                 throw new Exception ($"Can't load {arg} local in function {_currentFunction.Descriptor.Name}.");
                             }
 
-                            _program.AddRange (OpCodes.LoadLocal (arg).GetBytes ());
+                            _program.Add ((byte) OpCode.LdLoc);
+                            _program.AddRange (Utils.GetBytes (arg));
 
                             return null;
                         }
@@ -156,7 +154,8 @@ namespace Modl.Vm.Asm {
                                 throw new Exception ($"Can't store {arg} local in function {_currentFunction.Descriptor.Name}.");
                             }
 
-                            _program.AddRange (OpCodes.StoreLocal (arg).GetBytes ());
+                            _program.Add ((byte) OpCode.StLoc);
+                            _program.AddRange (Utils.GetBytes (arg));
 
                             return null;
                         }
@@ -173,7 +172,8 @@ namespace Modl.Vm.Asm {
 
                             var ind = Array.IndexOf (_functions.Keys.ToArray (), arg);
 
-                            _program.AddRange (OpCodes.Call (ind).GetBytes ());
+                            _program.Add ((byte) OpCode.Call);
+                            _program.AddRange (Utils.GetBytes (ind));
 
                             return null;
                         }
