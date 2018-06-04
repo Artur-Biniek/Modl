@@ -1,7 +1,7 @@
 .main(locals=2):
         int     6
         stloc   0
-        int     1
+        int     4
         stloc   1
 
         ldloc   1
@@ -13,6 +13,22 @@
         ldloc   0
         call    diff
         print
+
+        ldloc   1
+        ldloc   0
+        mul
+        print
+
+        ldloc   1
+        ldloc   0
+        div
+        print
+
+        ldloc   1
+        ldloc   0
+        mod
+        print        
+
         br      end
         int     1
         int     2
@@ -21,7 +37,7 @@
     end:
         hlt
     
-.fib():
+.rest():
         ret    
 
 .sum(args=2, locals=1):

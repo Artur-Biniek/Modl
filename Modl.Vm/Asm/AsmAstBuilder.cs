@@ -81,6 +81,18 @@ namespace Modl.Vm.Asm {
                         _program.Add ((byte) OpCode.SubInt);
                         return null;
 
+                    case "mul":
+                        _program.Add ((byte) OpCode.MulInt);
+                        return null;
+
+                    case "div":
+                        _program.Add ((byte) OpCode.DivInt);
+                        return null;
+
+                    case "mod":
+                        _program.Add ((byte) OpCode.ModInt);
+                        return null;                                                                        
+
                     case "ret":
                         _program.Add ((byte) OpCode.Ret);
                         return null;
