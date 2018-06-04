@@ -28,5 +28,9 @@ namespace Modl.Common {
         public static Instruction MulInt = new ZeroOperandInstruction (OpCode.MulInt);
         public static Instruction DivInt = new ZeroOperandInstruction (OpCode.DivInt);
         public static Instruction ModInt = new ZeroOperandInstruction (OpCode.ModInt);
+
+        public static Instruction Branch (int address) {
+            return new OneOperandInstruction<int> (OpCode.Br, address);
+        }
     }
 }

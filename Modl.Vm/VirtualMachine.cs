@@ -188,6 +188,18 @@ namespace Modl.Vm {
                             break;
                         }
 
+                    case OpCode.Br:
+                        {
+                            int v = getIntArg (_program, __IP);
+                            __IP += 4;
+
+                            op1 = v.ToString ();                            
+
+                            __IP = v;
+                            
+                            break;
+                        }                        
+
                     case OpCode.Halt:
                         return;
 

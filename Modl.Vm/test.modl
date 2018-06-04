@@ -1,32 +1,34 @@
 .main(locals=2):
-    int     6
-    stloc   0
-    int     1
-    stloc   1
+        int     6
+        stloc   0
+        int     1
+        stloc   1
 
-    ldloc   1
-    ldloc   0
-    call    sum
-    print
+        ldloc   1
+        ldloc   0
+        call    sum
+        print
 
-    ldloc   1
-    ldloc   0
-    call    diff
-    print    
-    hlt
+        ldloc   1
+        ldloc   0
+        call    diff
+        print
+        br      end
+    end:
+        hlt
     
 .fib():
-    ret    
+        ret    
 
 .sum(args=2, locals=1):
-    lda 0
-    lda 1
-    add
-    ret
+        lda 0
+        lda 1
+        add
+        ret
 
 .diff(args=2):
-    lda     0    
-    lda     1
-    sub
-    ret
+        lda     0    
+        lda     1
+        sub
+        ret
 

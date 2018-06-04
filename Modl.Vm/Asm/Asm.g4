@@ -10,8 +10,9 @@ stats
     : stat+;
 
 stat
-    : KEYWORD_NOOP (NL+) 
-    | KEYWORD_SINGLE operand (NL+)
+    : KEYWORD_NOOP (NL+)            # zerOpStat
+    | KEYWORD_SINGLE operand (NL+)  # oneOpStat
+    | ID ':'  (NL+)                 # label
     ;
 
 operand
@@ -33,7 +34,7 @@ KEYWORD_NOOP:
 	| 'mul'
 	| 'div'
 	| 'mod';
-KEYWORD_SINGLE: 'call' | 'int' | 'lda' | 'ldloc' | 'stloc' ;
+KEYWORD_SINGLE: 'call' | 'int' | 'lda' | 'ldloc' | 'stloc' | 'br';
 ID: [a-zA-Z]+;
 NUM: [0-9]+;
 WS: [ \t] -> skip;

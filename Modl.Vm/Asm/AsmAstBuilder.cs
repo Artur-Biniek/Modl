@@ -10,17 +10,21 @@ namespace Modl.Vm.Asm {
 
         private List<byte> _program = new List<byte> ();
         private Dictionary<string, FunctionDescriptor> _functions = new Dictionary<string, FunctionDescriptor> ();
-        private FunctionDescriptor _currentFunction;
+        private FunctionDefinition _currentFunction;
 
-        public byte[] Program => _program.ToArray();
-        public FunctionDescriptor[] Functions => _functions.Values.ToArray();
+        public byte[] Program => _program.ToArray ();
+        public FunctionDescriptor[] Functions => _functions.Values.ToArray ();
 
         public override object VisitProgram (AsmParser.ProgramContext context) {
             Console.WriteLine ("Found program.");
 
             base.VisitChildren (context);
 
-            // validate functions            
+            foreach (var item in _functions.Values) {
+                if (item.Address == -1) {
+                    throw new Exception ($"Undefined function [{item.Name}]");
+                }
+            }
 
             return null;
         }
@@ -42,7 +46,7 @@ namespace Modl.Vm.Asm {
                 pairs.TryGetValue ("locals", out localsCnt);
             }
 
-            _currentFunction = new FunctionDescriptor (name, _program.Count, argsCnt, localsCnt);
+            _currentFunction = new FunctionDefinition (_program) { Descriptor = new FunctionDescriptor (name, _program.Count, argsCnt, localsCnt) };
 
             if (_functions.TryGetValue (name, out var tmp)) {
                 if (tmp.Address != -1) {
@@ -50,15 +54,16 @@ namespace Modl.Vm.Asm {
                 }
             }
 
-            _functions[name] = _currentFunction;
+            _functions[name] = _currentFunction.Descriptor;
 
-            foreach(var st in context.stats().stat()) VisitStat(st);
+            base.VisitChildren (context.stats ());
 
-            // validate labels
+            _currentFunction.VerifyForwardRefs ();
+
             return null;
         }
 
-        public override object VisitStat (AsmParser.StatContext ctx) {
+        public override object VisitZerOpStat (AsmParser.ZerOpStatContext ctx) {
             Console.WriteLine ("\tFound stat: " + ctx.GetText ());
 
             var zeroOp = ctx.KEYWORD_NOOP ();
@@ -83,7 +88,7 @@ namespace Modl.Vm.Asm {
 
                     case "print":
                         _program.AddRange (OpCodes.Print.GetBytes ());
-                        return null;                        
+                        return null;
 
                     default:
                         throw new Exception ($"Unknown [{zeroOp.GetText()}] instruction.");
@@ -91,6 +96,10 @@ namespace Modl.Vm.Asm {
                 }
             }
 
+            return null;
+        }
+
+        public override object VisitOneOpStat (AsmParser.OneOpStatContext ctx) {
             var oneOp = ctx.KEYWORD_SINGLE ();
 
             if (oneOp != null) {
@@ -117,8 +126,8 @@ namespace Modl.Vm.Asm {
                         {
                             var arg = int.Parse (ctx.operand ().NUM ().GetText ());
 
-                            if (_currentFunction.ArgumentsCount < arg|| arg < 0) {
-                                throw new Exception ($"Can't load {arg} argument in function {_currentFunction.Name}.");
+                            if (_currentFunction.Descriptor.ArgumentsCount < arg || arg < 0) {
+                                throw new Exception ($"Can't load {arg} argument in function {_currentFunction.Descriptor.Name}.");
                             }
 
                             _program.AddRange (OpCodes.LoadArg (arg).GetBytes ());
@@ -130,27 +139,27 @@ namespace Modl.Vm.Asm {
                         {
                             var arg = int.Parse (ctx.operand ().NUM ().GetText ());
 
-                            if (_currentFunction.LocalsCount < arg || arg < 0) {
-                                throw new Exception ($"Can't load {arg} local in function {_currentFunction.Name}.");
+                            if (_currentFunction.Descriptor.LocalsCount < arg || arg < 0) {
+                                throw new Exception ($"Can't load {arg} local in function {_currentFunction.Descriptor.Name}.");
                             }
 
                             _program.AddRange (OpCodes.LoadLocal (arg).GetBytes ());
 
                             return null;
-                        }          
+                        }
 
                     case "stloc":
                         {
                             var arg = int.Parse (ctx.operand ().NUM ().GetText ());
 
-                            if (_currentFunction.LocalsCount < arg || arg < 0) {
-                                throw new Exception ($"Can't store {arg} local in function {_currentFunction.Name}.");
+                            if (_currentFunction.Descriptor.LocalsCount < arg || arg < 0) {
+                                throw new Exception ($"Can't store {arg} local in function {_currentFunction.Descriptor.Name}.");
                             }
 
                             _program.AddRange (OpCodes.StoreLocal (arg).GetBytes ());
 
                             return null;
-                        }                                     
+                        }
 
                     case "call":
                         {
@@ -169,10 +178,28 @@ namespace Modl.Vm.Asm {
                             return null;
                         }
 
+                    case "br":
+                        {
+                            var arg = ctx.operand ().ID ().GetText ();
+
+                            _program.Add ((byte) OpCode.Br);
+                            _program.AddRange (Utils.GetBytes (_currentFunction.GetLabel (arg)));
+
+                            return null;
+                        }
+
                     default:
                         throw new Exception ($"Unknown [{oneOp.GetText()}] instruction.");
                 }
             }
+
+            return null;
+        }
+
+        public override object VisitLabel (AsmParser.LabelContext ctx) {
+            var name = ctx.ID ().GetText ();
+
+            _currentFunction.MarkLabel (name);
 
             return null;
         }

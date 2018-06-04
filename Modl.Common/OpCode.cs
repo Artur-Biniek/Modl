@@ -18,6 +18,8 @@ namespace Modl.Common {
         LdArg = 103,
         LdLoc = 104,
         StLoc = 105,
-        Print = 106,      
+        Print = 106,
+
+        Br = 150,      
     }
 }

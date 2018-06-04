@@ -14,10 +14,10 @@ namespace Modl.Common.Instructions {
 
             byte[] bytes = new byte[] { };
             if (Operand is int i) {
-                bytes = BitConverter.GetBytes (i);
+                bytes = Utils.GetBytes (i);
             }            
 
-            foreach (var b in (BitConverter.IsLittleEndian ? bytes : bytes.Reverse())) yield return b;
+            foreach (var b in bytes) yield return b;
         }
     }
 }
