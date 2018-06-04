@@ -20,6 +20,8 @@ namespace Modl.Common {
         StLoc = 105,
         Print = 106,
 
-        Br = 150,      
+        Br = 150,     
+        Brt = 151,
+        Brf = 152, 
     }
 }
